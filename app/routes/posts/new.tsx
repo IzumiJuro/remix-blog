@@ -1,6 +1,5 @@
 import { ActionFunction, Link, redirect } from "remix"
 import { db } from "~/utils/db.server";
-import type { Post } from "@prisma/client";
 
 export const action: ActionFunction = async ({request}) => {
   // console.log(123)
