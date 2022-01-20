@@ -1,27 +1,35 @@
 import { ActionFunction, Link, redirect } from "remix"
 import { db } from "~/utils/db.server";
 
-export const action: ActionFunction = async ({request}) => {
+type ActionData = {
+  formError?: string,
+  filedErrors?: {
+    title: string | undefined;
+    body: string | undefined;
+  };
+  fields?: {
+    title: string;
+    body: string;
+  };
+};
+
+
+export let action: ActionFunction = async ({request}): Promise<Response | ActionData> => {
   // console.log(123)
-  const form = await request.formData();
-  const title = form.get('title');
-  const body = form.get('body');
+  let form = await request.formData();
+  let title = form.get('title');
+  let body = form.get('body');
 
   // we do this type check
   // to be extra sure and to make TypeScript happy
-  if (
-    typeof title !== "string" ||
-    typeof body !== "string"
-  ) {
-    throw new Error(`Form not submitted correctly.`);
+  if (typeof title !== "string" || typeof body !== "string") {
+    return { formError: `Form not submitted correctly.`};
   }
 
-  const fields = {title, body};
+  let fields = {title, body};
 
-  const post = await db.post.create({data: fields});
-  // console.log(fields);
+  let post = await db.post.create({data: fields});
 
-  //
   return redirect(`/posts/${post.id}`)
 }
 

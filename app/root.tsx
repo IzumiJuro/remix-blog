@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Link, Links, LiveReload, Meta, Outlet } from "remix";
 import globalStylesUrl from '~/styles/global.css'
 
-export const links = () => [{
+export let links = () => [{
   rel: 'stylesheet',
   href: globalStylesUrl
 }];
 
-export const meta = () => {
-  const description = 'A cool blog built with Remix';
-  const keywords = 'remix, react, typescript';
+export let meta = () => {
+  let description = 'A cool blog built with Remix';
+  let keywords = 'remix, react, typescript';
 
   return {
     description,
@@ -67,8 +67,7 @@ function Layout({ children }: {children: React.ReactNode}) {
   )
 }
 
-// Don't know the error closest type :(
-  export function ErrorBoundary({error}: any) {
+  export function ErrorBoundary({error}: {error: Error}) {
     console.log(error);
     return (
       <Document>

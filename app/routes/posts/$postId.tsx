@@ -4,25 +4,27 @@ import { db } from "~/utils/db.server";
 // export const loader = async ({ params }) => {
 
 // };
-export const loader: LoaderFunction = async ({params}) => {
-  const post = await db.post.findUnique({
+export let loader: LoaderFunction = async ({params}) => {
+  let post = await db.post.findUnique({
     where: { id: params.postId }
   });
 
-  if(!post) throw new Error('Post not found');
+  if(!post) {
+    throw new Response("Not found.", {status: 404},);
+  }
 
-  const data = {post};
+  let data = {post};
   return data;
 }
 
-export const action: ActionFunction = async ({request, params}) => {
-  const form = await request.formData();
+export let action: ActionFunction = async ({request, params}) => {
+  let form = await request.formData();
   if(form.get('_method') === 'delete') {
-    const post = await db.post.findUnique({
+    let post = await db.post.findUnique({
       where: { id: params.postId }
     });
 
-    if(!post) throw new Error('Post not found');
+    if(!post) throw new Response('Post not found', {status: 404});
 
     await db.post.delete({
       where: { id: params.postId }
@@ -32,7 +34,7 @@ export const action: ActionFunction = async ({request, params}) => {
 }
 
 function Post() {
-  const {post} = useLoaderData();
+  let {post} = useLoaderData();
   // const params = useParams();
 
   return (

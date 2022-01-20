@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "remix";
+import { Link, LoaderFunction, useLoaderData } from "remix";
 import { db } from "~/utils/db.server";
 
 export type Post = {
@@ -10,9 +10,9 @@ export type Post = {
 };
 
 // Loader runs on the server
-export const loader = async() => {
+export let loader: LoaderFunction = async() => {
   // console.log(123);
-  const posts = await db.post.findMany({
+  let posts = await db.post.findMany({
     take: 20,
     select: {id: true, title: true, createdAt: true},
     orderBy: {createdAt: 'desc'}
@@ -24,7 +24,7 @@ export const loader = async() => {
 
 
 function PostItems() {
-  const posts  = useLoaderData<Post[]>();
+  let posts  = useLoaderData<Post[]>();
   return (
     <>
       <div className="page-header">
