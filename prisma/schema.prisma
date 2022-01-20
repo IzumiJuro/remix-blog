@@ -7,9 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
-  url = "mysql://rtybw9ohd892:pscale_pw_MKhgJc1ZT28esUiq3Xfz3JBrcOGY6BefDFohzcNh0DI@h7hcb7kp0sv3.ap-northeast-2.psdb.cloud/remixpost?sslaccept=strict"
-  referentialIntegrity = "prisma"
+  provider = "mysql"
+  url = "mysql://8l0xjm7y2sxe:pscale_pw_C6K0YHWHIH18lM4vV-4TOiRJREYgtL-V5g8IVghUjCU@g93ocfwo9cv7.us-east-3.psdb.cloud/remixblog?sslaccept=strict"
 }
 
 model Post {
