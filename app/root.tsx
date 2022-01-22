@@ -1,7 +1,10 @@
+import { User } from '@prisma/client';
 import * as React from 'react';
-import { Link, Links, LiveReload, Meta, Outlet } from "remix";
+import { Link, Links, LiveReload, LoaderFunction, Meta, Outlet, useLoaderData } from "remix";
 import globalStylesUrl from '~/styles/global.css'
+import { getUser } from './utils/session.server';
 
+type LoaderData = { user: User | null};
 export let links = () => [{
   rel: 'stylesheet',
   href: globalStylesUrl
@@ -15,6 +18,14 @@ export let meta = () => {
     description,
     keywords,
   };
+}
+
+export let loader: LoaderFunction = async({request}) => {
+  let user = await getUser(request);
+  let data = {
+    user
+  };
+  return data;
 }
 
 export default function App() {
@@ -46,6 +57,8 @@ function Document({ children, title }: {children: React.ReactNode, title?: strin
 }
 
 function Layout({ children }: {children: React.ReactNode}) {
+  let {user} = useLoaderData<LoaderData>();
+
   return (
     <>
       <nav className="navbar">
@@ -57,6 +70,17 @@ function Layout({ children }: {children: React.ReactNode}) {
           <li>
             <Link to='/posts'>Posts</Link>
           </li>
+          {user ? (
+            <li>
+              <form action="/auth/logout" method='POST'>
+                <button className="btn" type='submit'>
+                  Logout {user.username}
+                </button>
+              </form>
+            </li>
+          ) : (<li>
+            <Link to='/auth/login'>Login</Link>
+          </li>)}
         </ul>
       </nav>
 
